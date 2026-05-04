@@ -9,6 +9,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import utils.ConfigReader;
+
 /**
  * Base class for all Page Objects.
  * Provides shared WebDriver helpers so concrete pages stay clean.
@@ -18,11 +20,9 @@ public abstract class BasePage {
     protected WebDriver driver;
     protected WebDriverWait wait;
 
-    private static final int DEFAULT_WAIT_SECONDS = 15;
-
     protected BasePage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_WAIT_SECONDS));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getInt("explicit.wait.seconds")));
         PageFactory.initElements(driver, this);
     }
 

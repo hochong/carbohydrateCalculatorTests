@@ -1,9 +1,13 @@
 package pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+
+import utils.ConfigReader;
 
 /**
  * Page Object for https://www.calculator.net/carbohydrate-calculator.html
@@ -13,8 +17,7 @@ public class CarbohydrateCalculatorPage extends BasePage {
     // -------------------------------------------------------------------------
     // Constants
     // -------------------------------------------------------------------------
-    public static final String PAGE_URL =
-            "https://www.calculator.net/carbohydrate-calculator.html";
+    public static final String PAGE_URL = ConfigReader.get("base.url");
     
     // -------------------------------------------------------------------------
     // Unit tab links
@@ -254,8 +257,73 @@ public class CarbohydrateCalculatorPage extends BasePage {
     }
 
     public String getActiveUnitTab() {
-        return driver.findElement(
-                org.openqa.selenium.By.cssSelector("li#menuon"))
+        return driver.findElement(By.cssSelector("li#menuon"))
                 .getText().trim();
+    }
+    
+    // -------------------------------------------------------------------------
+    // Age field validation helpers
+    // -------------------------------------------------------------------------
+    /**
+     * Clears the age input field by selecting all text and deleting it.
+     * This triggers keyup events that the application listens to for validation.
+     */
+    public CarbohydrateCalculatorPage clearAgeField() {
+        waitForVisibility(ageField);
+        ageField.click();
+        // Select all text with Ctrl+A, then delete to trigger keyup event
+        ageField.sendKeys(org.openqa.selenium.Keys.CONTROL, "a");
+        ageField.sendKeys(org.openqa.selenium.Keys.DELETE);
+        return this;
+    }
+    
+    /**
+     * Simulates losing focus on the age field by clicking on another element (male radio).
+     * This triggers validation events and dynamically adds the error message to the DOM
+     * when the field is empty, matching real user behavior.
+     */
+    public CarbohydrateCalculatorPage blurAgeField() {
+        scrollIntoView(ageField);
+        ageField.click();
+        // Click on the male radio button to move focus away from age field
+        waitAndClick(maleRadioButton);
+        return this;
+    }
+    
+    /**
+     * Checks if the age field error message is displayed.
+     * Since the element is dynamically added to the DOM, we wait for presence first.
+     */
+    public boolean isAgeErrorMessageDisplayed() {
+        try {
+            // Wait for the error element to be present in the DOM (it's dynamically added)
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.id("cageifcErr")));
+            // Now check if it's visible
+            return ageFieldError.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    /**
+     * Gets the age field error message text.
+     */
+    public String getAgeErrorMessage() {
+        try {
+            return getResultText(ageFieldError);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+    
+    /**
+     * Checks if an error result is displayed (shown when validation fails on submit).
+     */
+    public boolean isErrorResultDisplayed() {
+        try {
+            return waitForVisibility(errorMessage).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

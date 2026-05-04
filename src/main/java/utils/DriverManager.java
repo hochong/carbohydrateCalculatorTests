@@ -15,9 +15,6 @@ public class DriverManager {
 
     private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
-    private static final int IMPLICIT_WAIT_SECONDS = 10;
-    private static final int PAGE_LOAD_TIMEOUT_SECONDS = 30;
-
     private DriverManager() {
         // Utility class — not instantiable
     }
@@ -34,12 +31,13 @@ public class DriverManager {
             options.addArguments("--start-maximized");
             options.addArguments("--disable-notifications");
             options.addArguments("--disable-popup-blocking");
-            // Remove the next line to run with a visible browser window
-            // options.addArguments("--headless=new");
+            if (ConfigReader.getBoolean("headless")) {
+                options.addArguments("--headless=new", "--window-size=1920,1080");
+            }
 
             WebDriver driver = new ChromeDriver(options);
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
-            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(PAGE_LOAD_TIMEOUT_SECONDS));
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(ConfigReader.getInt("implicit.wait.seconds")));
+            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(ConfigReader.getInt("page.load.timeout.seconds")));
 
             driverThreadLocal.set(driver);
         }
