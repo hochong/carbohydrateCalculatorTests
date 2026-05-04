@@ -13,7 +13,7 @@ Feature: Carbohydrate Calculator
     Then  "US Units" tab is selected
   	
   	# Use inputs steps to check feet/inches/pounds input text box displayed
-	When  the user enters height of "6" feet and "5" inches   
+	  When  the user enters height of "6" feet and "5" inches   
     And  the user enters weight of "155" pounds
     
   # --------------------------------------------------------------------------
@@ -28,7 +28,7 @@ Feature: Carbohydrate Calculator
     Then  the result header should be displayed
     And   the result suggestion should be displayed
     And   the result section should be displayed
-        
+
   # --------------------------------------------------------------------------
   # Scenario 13 — Happy path: Standard calculation metric units moderate female
   # --------------------------------------------------------------------------
@@ -45,3 +45,18 @@ Feature: Carbohydrate Calculator
     Then  the result header should be displayed
     And   the result suggestion should be displayed
     And   the result section should be displayed
+
+  # --------------------------------------------------------------------------
+  # Scenario 19 — Validation: Empty age field
+  # --------------------------------------------------------------------------
+  Scenario: EmptyAgeFieldValidation
+    Given the user selects "metric units"
+    
+    When  the user clears the age field
+    And   the user loses focus on the age field
+    
+    Then  the age validation error message should be displayed
+    
+    When  the user clicks the Calculate button
+    
+    Then  an error result should be shown

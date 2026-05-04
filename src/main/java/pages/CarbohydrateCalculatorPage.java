@@ -18,7 +18,13 @@ public class CarbohydrateCalculatorPage extends BasePage {
     // Constants
     // -------------------------------------------------------------------------
     public static final String PAGE_URL = ConfigReader.get("base.url");
-    
+
+    // -------------------------------------------------------------------------
+    // TitleHeader
+    // -------------------------------------------------------------------------
+    @FindBy(xpath = "//h1[normalize-space()='Carbohydrate Calculator']")
+    private WebElement titleHeader;
+
     // -------------------------------------------------------------------------
     // Unit tab links
     // -------------------------------------------------------------------------
@@ -103,7 +109,7 @@ public class CarbohydrateCalculatorPage extends BasePage {
     // -------------------------------------------------------------------------
     // Result / error elements
     // -------------------------------------------------------------------------
-    /** The main result section that appears after a successful calculation. */
+    // The main result section that appears after a successful calculation
     @FindBy(xpath = "//h2[contains(@class,'h2result')]")
 	private WebElement resultHeader;
     
@@ -218,7 +224,6 @@ public class CarbohydrateCalculatorPage extends BasePage {
     // -------------------------------------------------------------------------
     // Result / validation accessors
     // -------------------------------------------------------------------------
-    /** Returns true when the result section is visible on the page. */
     public boolean isResultHeaderDisplayed() {
         try {
  
@@ -257,17 +262,24 @@ public class CarbohydrateCalculatorPage extends BasePage {
     }
 
     public String getActiveUnitTab() {
-        return driver.findElement(By.cssSelector("li#menuon"))
-                .getText().trim();
+        int attempts = 0;
+        while (attempts < 3) {
+            try {
+                return driver.findElement(By.cssSelector("li#menuon"))
+                        .getText().trim();
+            } catch (org.openqa.selenium.StaleElementReferenceException e) {
+                attempts++;
+                if (attempts >= 3) {
+                    throw e;
+                }
+            }
+        }
+        return ""; // Should not reach here
     }
     
     // -------------------------------------------------------------------------
     // Age field validation helpers
     // -------------------------------------------------------------------------
-    /**
-     * Clears the age input field by selecting all text and deleting it.
-     * This triggers keyup events that the application listens to for validation.
-     */
     public CarbohydrateCalculatorPage clearAgeField() {
         waitForVisibility(ageField);
         ageField.click();
@@ -277,37 +289,24 @@ public class CarbohydrateCalculatorPage extends BasePage {
         return this;
     }
     
-    /**
-     * Simulates losing focus on the age field by clicking on another element (male radio).
-     * This triggers validation events and dynamically adds the error message to the DOM
-     * when the field is empty, matching real user behavior.
-     */
+    // Simulates losing focus on the age field by clicking on another element
     public CarbohydrateCalculatorPage blurAgeField() {
         scrollIntoView(ageField);
         ageField.click();
         // Click on the male radio button to move focus away from age field
-        waitAndClick(maleRadioButton);
+        waitAndClick(titleHeader);
         return this;
     }
     
-    /**
-     * Checks if the age field error message is displayed.
-     * Since the element is dynamically added to the DOM, we wait for presence first.
-     */
     public boolean isAgeErrorMessageDisplayed() {
         try {
-            // Wait for the error element to be present in the DOM (it's dynamically added)
             wait.until(ExpectedConditions.presenceOfElementLocated(By.id("cageifcErr")));
-            // Now check if it's visible
             return ageFieldError.isDisplayed();
         } catch (Exception e) {
             return false;
         }
     }
     
-    /**
-     * Gets the age field error message text.
-     */
     public String getAgeErrorMessage() {
         try {
             return getResultText(ageFieldError);
@@ -316,9 +315,6 @@ public class CarbohydrateCalculatorPage extends BasePage {
         }
     }
     
-    /**
-     * Checks if an error result is displayed (shown when validation fails on submit).
-     */
     public boolean isErrorResultDisplayed() {
         try {
             return waitForVisibility(errorMessage).isDisplayed();

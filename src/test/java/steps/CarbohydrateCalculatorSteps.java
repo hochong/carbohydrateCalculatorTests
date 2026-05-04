@@ -76,6 +76,16 @@ public class CarbohydrateCalculatorSteps {
         calculatorPage.enterAge(age);
     }
     
+    @When("the user clears the age field")
+    public void theUserClearsTheAgeField() {
+        calculatorPage.clearAgeField();
+    }
+    
+    @When("the user loses focus on the age field")
+    public void theUserLosesFocusOnTheAgeField() {
+        calculatorPage.blurAgeField();
+    }
+    
     @When("the user selects gender {string}")
     public void theUserSelectsGender(String gender) {
         if (gender.equalsIgnoreCase("male")) {
@@ -144,6 +154,20 @@ public class CarbohydrateCalculatorSteps {
     public void theResultSectionShouldBeDisplayed() {
         assertThat(calculatorPage.isResultDisplayed())
                 .as("Result section should be visible after clicking Calculate")
+                .isTrue();
+    }
+    
+    @Then("the age validation error message should be displayed")
+    public void theAgeValidationErrorMessageShouldBeDisplayed() {
+        assertThat(calculatorPage.isAgeErrorMessageDisplayed())
+                .as("Age field validation error message should be displayed when field is empty and loses focus")
+                .isTrue();
+    }
+    
+    @Then("an error result should be shown")
+    public void anErrorResultShouldBeShown() {
+        assertThat(calculatorPage.isErrorResultDisplayed())
+                .as("Error result should be displayed when required fields are missing")
                 .isTrue();
     }
 }
