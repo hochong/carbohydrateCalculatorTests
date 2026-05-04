@@ -47,6 +47,24 @@ Feature: Carbohydrate Calculator
     And   the result section should be displayed
 
   # --------------------------------------------------------------------------
+  # Scenario 13Alt — Happy path + result table column header verification
+  # --------------------------------------------------------------------------
+  Scenario: StandardCalculationMetricModerate13Alt
+    Given the user selects "metric units"
+
+    When  the user enters age "35"
+    And   the user selects gender "female"
+    And   the user enters height of "140" cm
+    And   the user enters weight of "60" kg
+    And   the user selects activity level "Moderate"
+    And   the user clicks the Calculate button
+
+    Then  the result header should be displayed
+    And   the result suggestion should be displayed
+    And   the result section should be displayed:
+      | Goal | Daily Calorie Allowance | 40%* | 55%* | 65%* | 75%* |
+
+  # --------------------------------------------------------------------------
   # Scenario 19 — Validation: Empty age field
   # --------------------------------------------------------------------------
   Scenario: EmptyAgeFieldValidation

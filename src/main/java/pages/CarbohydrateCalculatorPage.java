@@ -9,6 +9,9 @@ import org.openqa.selenium.support.ui.Select;
 
 import utils.ConfigReader;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Page Object for https://www.calculator.net/carbohydrate-calculator.html
  */
@@ -277,6 +280,26 @@ public class CarbohydrateCalculatorPage extends BasePage {
         return ""; // Should not reach here
     }
     
+    // -------------------------------------------------------------------------
+    // Result table inspection
+    // -------------------------------------------------------------------------
+    /**
+     * Returns the column headers from the first row of the result table.
+     * Tries &lt;th&gt; elements first; falls back to &lt;td&gt; elements in the first &lt;tr&gt;
+     * to handle tables that use &lt;td&gt; for header cells.
+     */
+    public List<String> getResultTableHeaders() {
+        waitForVisibility(resultSection);
+        List<WebElement> cells = resultSection.findElements(By.tagName("th"));
+        if (cells.isEmpty()) {
+            cells = resultSection.findElements(By.cssSelector("tr:first-child td"));
+        }
+        return cells.stream()
+                .map(el -> el.getText().trim())
+                .filter(text -> !text.isEmpty())
+                .collect(Collectors.toList());
+    }
+
     // -------------------------------------------------------------------------
     // Age field validation helpers
     // -------------------------------------------------------------------------

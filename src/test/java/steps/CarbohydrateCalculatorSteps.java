@@ -1,5 +1,6 @@
 package steps;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
@@ -11,6 +12,8 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import pages.CarbohydrateCalculatorPage;
 import utils.DriverManager;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -156,7 +159,21 @@ public class CarbohydrateCalculatorSteps {
                 .as("Result section should be visible after clicking Calculate")
                 .isTrue();
     }
-    
+
+    @Then("the result section should be displayed:")
+    public void theResultSectionShouldBeDisplayedWithTable(DataTable dataTable) {
+        assertThat(calculatorPage.isResultDisplayed())
+                .as("Result section should be visible after clicking Calculate")
+                .isTrue();
+
+        List<String> expectedHeaders = dataTable.row(0);
+        List<String> actualHeaders   = calculatorPage.getResultTableHeaders();
+
+        assertThat(actualHeaders)
+                .as("Result table column headers should match the expected columns")
+                .containsExactlyElementsOf(expectedHeaders);
+    }
+
     @Then("the age validation error message should be displayed")
     public void theAgeValidationErrorMessageShouldBeDisplayed() {
         assertThat(calculatorPage.isAgeErrorMessageDisplayed())
