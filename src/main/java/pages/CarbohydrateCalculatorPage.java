@@ -300,6 +300,28 @@ public class CarbohydrateCalculatorPage extends BasePage {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns all rows of the result table as a list of lists.
+     * Each inner list represents one row; cells are read as &lt;th&gt; first,
+     * falling back to &lt;td&gt; for rows without semantic header markup.
+     */
+    public List<List<String>> getResultTableData() {
+        waitForVisibility(resultSection);
+        return resultSection.findElements(By.tagName("tr")).stream()
+                .map(row -> {
+                    List<WebElement> cells = row.findElements(By.tagName("th"));
+                    if (cells.isEmpty()) {
+                        cells = row.findElements(By.tagName("td"));
+                    }
+                    return cells.stream()
+                            .map(el -> el.getText().trim())
+                            .filter(text -> !text.isEmpty())
+                            .collect(Collectors.toList());
+                })
+                .filter(row -> !row.isEmpty())
+                .collect(Collectors.toList());
+    }
+
     // -------------------------------------------------------------------------
     // Age field validation helpers
     // -------------------------------------------------------------------------

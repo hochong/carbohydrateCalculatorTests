@@ -166,12 +166,12 @@ public class CarbohydrateCalculatorSteps {
                 .as("Result section should be visible after clicking Calculate")
                 .isTrue();
 
-        List<String> expectedHeaders = dataTable.row(0);
-        List<String> actualHeaders   = calculatorPage.getResultTableHeaders();
+        List<List<String>> expectedTable = dataTable.asLists();
+        List<List<String>> actualTable   = calculatorPage.getResultTableData();
 
-        assertThat(actualHeaders)
-                .as("Result table column headers should match the expected columns")
-                .containsExactlyElementsOf(expectedHeaders);
+        assertThat(actualTable)
+                .as("Result table rows and columns should match the expected data")
+                .isEqualTo(expectedTable);
     }
 
     @Then("the age validation error message should be displayed")

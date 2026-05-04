@@ -62,7 +62,12 @@ Feature: Carbohydrate Calculator
     Then  the result header should be displayed
     And   the result suggestion should be displayed
     And   the result section should be displayed:
-      | Goal | Daily Calorie Allowance | 40%* | 55%* | 65%* | 75%* |
+      | Goal               | Daily Calorie Allowance | 40%*      | 55%*      | 65%*      | 75%*      |
+      | Weight Maintenance | 1,669 Calories          | 178 grams | 245 grams | 289 grams | 334 grams |
+      | Lose 0.5 kg/week   | 1,169 Calories          | 125 grams | 171 grams | 203 grams | 234 grams |
+      | Lose 1 kg/week     | 669 Calories            | 71 grams  | 98 grams  | 116 grams | 134 grams |
+      | Gain 0.5 kg/week   | 2,169 Calories          | 231 grams | 318 grams | 376 grams | 434 grams |
+      | Gain 1 kg/week     | 2,669 Calories          | 285 grams | 391 grams | 463 grams | 534 grams |
 
   # --------------------------------------------------------------------------
   # Scenario 19 — Validation: Empty age field
