@@ -31,6 +31,9 @@ public class DriverManager {
             options.addArguments("--start-maximized");
             options.addArguments("--disable-notifications");
             options.addArguments("--disable-popup-blocking");
+            // Required when Chrome runs inside a Docker container
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
             if (ConfigReader.getBoolean("headless")) {
                 options.addArguments("--headless=new", "--window-size=1920,1080");
             }
