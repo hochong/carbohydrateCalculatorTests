@@ -361,26 +361,26 @@ public class CarbohydrateCalculatorPage extends BasePage {
     }
 
     /**
-     * Returns the computed border color of the age input field.
-     * Selenium reports colors in rgba() format — red = "rgba(255, 0, 0, 1)".
-     * Falls back to border-top-color if the shorthand returns empty.
+     * Returns the computed value of any CSS property on the age input field (#cage).
+     * Selenium reports colours in rgba() format.
+     * For border-color shorthand, falls back to border-top-color if the shorthand returns empty.
      */
-    public String getAgeFieldBorderColor() {
+    public String getAgeFieldCssValue(String property) {
         waitForVisibility(ageField);
-        String color = ageField.getCssValue("border-color");
-        if (color == null || color.isEmpty()) {
-            color = ageField.getCssValue("border-top-color");
+        String value = ageField.getCssValue(property);
+        if ((value == null || value.isEmpty()) && property.equals("border-color")) {
+            value = ageField.getCssValue("border-top-color");
         }
-        return color;
+        return value;
     }
 
     /**
-     * Returns the computed background color of the age error message element (#cageifcErr).
-     * Selenium reports colors in rgba() format — #ffcccc = "rgba(255, 204, 204, 1)".
+     * Returns the computed value of any CSS property on the age error element (#cageifcErr).
+     * Selenium reports colours in rgba() format.
      */
-    public String getAgeErrorBackgroundColor() {
+    public String getAgeErrorCssValue(String property) {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("cageifcErr")));
-        return ageFieldError.getCssValue("background-color");
+        return ageFieldError.getCssValue(property);
     }
     
     public boolean isErrorResultDisplayed() {

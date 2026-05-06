@@ -14,6 +14,7 @@ import pages.CarbohydrateCalculatorPage;
 import utils.DriverManager;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -174,19 +175,53 @@ public class CarbohydrateCalculatorSteps {
                 .isEqualTo(expectedTable);
     }
 
-    @Then("the age validation error message should be displayed")
-    public void theAgeValidationErrorMessageShouldBeDisplayed() {
+    /**
+     * Verifies the age error message element (#cageifcErr) using a DataTable.
+     * Columns:
+     *   text — expected text content of the error element (skipped if blank)
+     *   css  — property::value pair to assert on the element (skipped if blank)
+     */
+    @Then("the age validation error message should be displayed:")
+    public void theAgeValidationErrorMessageShouldBeDisplayed(DataTable dataTable) {
         assertThat(calculatorPage.isAgeErrorMessageDisplayed())
                 .as("Age field validation error message should be displayed when field is empty and loses focus")
                 .isTrue();
 
-        assertThat(calculatorPage.getAgeFieldBorderColor())
-                .as("Age field border should turn red when validation fails")
-                .isEqualTo("rgba(255, 0, 0, 1)");
+        Map<String, String> row = dataTable.asMaps().get(0);
 
-        assertThat(calculatorPage.getAgeErrorBackgroundColor())
-                .as("Age error element (#cageifcErr) background should be #ffcccc when validation fails")
-                .isEqualTo("rgba(255, 204, 204, 1)");
+        String expectedText = row.get("text");
+        if (expectedText != null && !expectedText.isBlank()) {
+            assertThat(calculatorPage.getAgeErrorMessage())
+                    .as("Age error message text should contain: " + expectedText)
+                    .containsIgnoringCase(expectedText);
+        }
+
+        String css = row.get("css");
+        if (css != null && !css.isBlank()) {
+            String[] parts = css.split("::", 2);
+            assertThat(calculatorPage.getAgeErrorCssValue(parts[0]))
+                    .as("Age error element CSS [" + parts[0] + "] should be " + parts[1])
+                    .isEqualTo(parts[1]);
+        }
+    }
+
+    /**
+     * Verifies the age input field (#cage) using a DataTable.
+     * Columns:
+     *   text — reserved for future text assertion (skipped if blank)
+     *   css  — property::value pair to assert on the field (skipped if blank)
+     */
+    @Then("age field should be displayed:")
+    public void ageFieldShouldBeDisplayed(DataTable dataTable) {
+        Map<String, String> row = dataTable.asMaps().get(0);
+
+        String css = row.get("css");
+        if (css != null && !css.isBlank()) {
+            String[] parts = css.split("::", 2);
+            assertThat(calculatorPage.getAgeFieldCssValue(parts[0]))
+                    .as("Age field CSS [" + parts[0] + "] should be " + parts[1])
+                    .isEqualTo(parts[1]);
+        }
     }
     
     @Then("an error result should be shown")

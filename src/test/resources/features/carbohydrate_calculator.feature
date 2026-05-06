@@ -74,12 +74,17 @@ Feature: Carbohydrate Calculator
   # --------------------------------------------------------------------------
   Scenario: EmptyAgeFieldValidation
     Given the user selects "metric units"
-    
+
     When  the user clears the age field
     And   the user loses focus on the age field
-    
-    Then  the age validation error message should be displayed
-    
+
+    Then  the age validation error message should be displayed:
+      | text           | css                                      |
+      | field required | background-color::rgba(255, 204, 204, 1) |
+    And   age field should be displayed:
+      | text | css                              |
+      |      | border-color::rgba(255, 0, 0, 1) |
+
     When  the user clicks the Calculate button
-    
+
     Then  an error result should be shown
