@@ -179,6 +179,14 @@ public class CarbohydrateCalculatorSteps {
         assertThat(calculatorPage.isAgeErrorMessageDisplayed())
                 .as("Age field validation error message should be displayed when field is empty and loses focus")
                 .isTrue();
+
+        assertThat(calculatorPage.getAgeFieldBorderColor())
+                .as("Age field border should turn red when validation fails")
+                .isEqualTo("rgba(255, 0, 0, 1)");
+
+        assertThat(calculatorPage.getAgeErrorBackgroundColor())
+                .as("Age error element (#cageifcErr) background should be #ffcccc when validation fails")
+                .isEqualTo("rgba(255, 204, 204, 1)");
     }
     
     @Then("an error result should be shown")

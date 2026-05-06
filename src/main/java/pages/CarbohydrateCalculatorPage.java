@@ -351,13 +351,36 @@ public class CarbohydrateCalculatorPage extends BasePage {
             return false;
         }
     }
-    
+
     public String getAgeErrorMessage() {
         try {
             return getResultText(ageFieldError);
         } catch (Exception e) {
             return "";
         }
+    }
+
+    /**
+     * Returns the computed border color of the age input field.
+     * Selenium reports colors in rgba() format — red = "rgba(255, 0, 0, 1)".
+     * Falls back to border-top-color if the shorthand returns empty.
+     */
+    public String getAgeFieldBorderColor() {
+        waitForVisibility(ageField);
+        String color = ageField.getCssValue("border-color");
+        if (color == null || color.isEmpty()) {
+            color = ageField.getCssValue("border-top-color");
+        }
+        return color;
+    }
+
+    /**
+     * Returns the computed background color of the age error message element (#cageifcErr).
+     * Selenium reports colors in rgba() format — #ffcccc = "rgba(255, 204, 204, 1)".
+     */
+    public String getAgeErrorBackgroundColor() {
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("cageifcErr")));
+        return ageFieldError.getCssValue("background-color");
     }
     
     public boolean isErrorResultDisplayed() {
