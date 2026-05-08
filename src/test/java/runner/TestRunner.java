@@ -30,7 +30,8 @@ import org.junit.runner.RunWith;
                 "pretty",                                          // readable console output
                 "html:target/cucumber-reports/cucumber.html",     // HTML report
                 "json:target/cucumber-reports/cucumber.json",     // JSON for CI integration
-                "junit:target/cucumber-reports/cucumber.xml"      // JUnit XML for CI
+                "junit:target/cucumber-reports/cucumber.xml",     // JUnit XML for CI
+                "listeners.StepTimingPlugin"                      // per-step timing log
         },
 
         // Publish a live report (requires network; set to false for offline CI)
