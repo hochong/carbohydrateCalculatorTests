@@ -33,7 +33,7 @@ public class StepTimingPlugin implements ConcurrentEventListener {
 
         if (event.getTestStep() instanceof PickleStepTestStep step) {
             // Scenario step — log the step definition expression (pattern)
-            String pattern = step.getDefinitionMatch().getPattern();
+            String pattern = step.getPattern();
             log.info(String.format("[STEP] %-65s | %5dms | %s", pattern, ms, status));
 
         } else if (event.getTestStep() instanceof HookTestStep hook) {
