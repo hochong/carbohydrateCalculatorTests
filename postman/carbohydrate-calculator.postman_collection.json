@@ -1,0 +1,121 @@
+{
+  "info": {
+    "name": "Carbohydrate Calculator API Tests",
+    "_postman_id": "carbo-calc-collection-v1",
+    "description": "HTTP-level tests for https://www.calculator.net/carbohydrate-calculator.html",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://www.calculator.net",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Smoke",
+      "item": [
+        {
+          "name": "Page Loads",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/carbohydrate-calculator.html",
+              "host": ["{{base_url}}"],
+              "path": ["carbohydrate-calculator.html"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response time under 3000ms', () => {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});",
+                  "",
+                  "pm.test('Content-Type is text/html', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('text/html');",
+                  "});",
+                  "",
+                  "pm.test('Page title is present in response', () => {",
+                  "    pm.expect(pm.response.text()).to.include('Carbohydrate Calculator');",
+                  "});",
+                  "",
+                  "pm.test('Age input field is present', () => {",
+                  "    pm.expect(pm.response.text()).to.include('id=\"cage\"');",
+                  "});",
+                  "",
+                  "pm.test('Calculate button is present', () => {",
+                  "    pm.expect(pm.response.text()).to.include('value=\"Calculate\"');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Edge Cases",
+      "item": [
+        {
+          "name": "Age = 0 (invalid boundary)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/carbohydrate-calculator.html?cage=0&csex=m&cheightmeter=170&ckg=70&cactivity=1.55&ctype=metric&x=Calculate",
+              "host": ["{{base_url}}"],
+              "path": ["carbohydrate-calculator.html"],
+              "query": [
+                { "key": "cage",         "value": "0" },
+                { "key": "csex",         "value": "m" },
+                { "key": "cheightmeter", "value": "170" },
+                { "key": "ckg",          "value": "70" },
+                { "key": "cactivity",    "value": "1.55" },
+                { "key": "ctype",        "value": "metric" },
+                { "key": "x",            "value": "Calculate" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response does not crash (no 5xx body)', () => {",
+                  "    pm.expect(pm.response.text()).to.not.include('500');",
+                  "    pm.expect(pm.response.text()).to.not.include('Internal Server Error');",
+                  "});",
+                  "",
+                  "pm.test('No valid result table returned for age 0', () => {",
+                  "    pm.expect(pm.response.text()).to.not.include('cinfoT');",
+                  "});",
+                  "",
+                  "pm.test('Error indication is present for age 0', () => {",
+                  "    const body = pm.response.text();",
+                  "    const hasErrorSvg    = body.includes('error.svg');",
+                  "    const hasErrorColor  = body.includes('color=\"red\"');",
+                  "    const hasAgeError    = body.toLowerCase().includes('age');",
+                  "    pm.expect(hasErrorSvg || hasErrorColor || hasAgeError).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
