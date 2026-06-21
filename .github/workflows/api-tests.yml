@@ -24,13 +24,13 @@ jobs:
 
       - name: Run Postman collection
         run: |
-          newman run postman/carbohydrate-calculator.json \
+          newman run postman/carbohydrate-calculator.postman_collection.json \
             --reporters cli,htmlextra \
-            --reporter-htmlextra-export results/report.html
+            --reporter-htmlextra-export postman/results/report.html
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: newman-report
-          path: results/report.html
+          path: postman/results/report.html

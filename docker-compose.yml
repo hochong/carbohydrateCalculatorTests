@@ -1,0 +1,11 @@
+services:
+
+  selenium-tests:
+    build: .
+    # Dockerfile already sets CMD ["mvn", "test", "-Dheadless=true"]
+
+  postman-tests:
+    image: postman/newman:latest
+    volumes:
+      - ./postman:/etc/newman
+    command: run carbohydrate-calculator.postman_collection.json --reporters cli,junit --reporter-junit-export /etc/newman/results/newman-results.xml
