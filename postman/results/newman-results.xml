@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Carbohydrate Calculator API Tests" tests="2" time="0.203">
+  <testsuite name="Smoke / Page Loads" id="5e80d6ab-2c40-4b42-b68b-c802e9c4164d" timestamp="2026-06-21T14:31:44.332Z" tests="6" failures="0" errors="0" time="0.158">
+    <testcase name="Status is 200" time="0.158" classname="CarbohydrateCalculatorApiTests"/>
+    <testcase name="Response time under 3000ms" time="0.158" classname="CarbohydrateCalculatorApiTests"/>
+    <testcase name="Content-Type is text/html" time="0.158" classname="CarbohydrateCalculatorApiTests"/>
+    <testcase name="Page title is present in response" time="0.158" classname="CarbohydrateCalculatorApiTests"/>
+    <testcase name="Age input field is present" time="0.158" classname="CarbohydrateCalculatorApiTests"/>
+    <testcase name="Calculate button is present" time="0.158" classname="CarbohydrateCalculatorApiTests"/>
+  </testsuite>
+  <testsuite name="Edge Cases / Age = 0 (invalid boundary)" id="98f73aca-c249-40d8-a424-81cc067f9269" timestamp="2026-06-21T14:31:44.332Z" tests="4" failures="0" errors="0" time="0.045">
+    <testcase name="Status is 200" time="0.045" classname="CarbohydrateCalculatorApiTests"/>
+    <testcase name="Response does not crash (no 5xx body)" time="0.045" classname="CarbohydrateCalculatorApiTests"/>
+    <testcase name="No valid result table returned for age 0" time="0.045" classname="CarbohydrateCalculatorApiTests"/>
+    <testcase name="Error indication is present for age 0" time="0.045" classname="CarbohydrateCalculatorApiTests"/>
+  </testsuite>
+</testsuites>
